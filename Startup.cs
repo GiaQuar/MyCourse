@@ -1,34 +1,38 @@
 public class Startup
 {
     public void ConfigureServices(IServiceCollection services)
-    {
-        // Aggiungi servizi qui
-    }
+{
+    services.AddControllersWithViews(); // più moderno di AddMvc()
+}
 
-    public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
-    {
-
-        if (env.IsDevelopment())
-    {
-        app.UseDeveloperExceptionPage();
-    }
-    else
-    {
-        // Middleware per la gestione degli errori in produzione
-        app.UseExceptionHandler("/Error");
-        app.UseHsts();
-    }
-        // Middleware per i file statici 
-        app.UseStaticFiles();
-
-        // Routing e altri middleware 
-        app.UseRouting();
-        app.UseEndpoints(endpoints =>
+public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IHostApplicationLifetime lifetime)
+{
+        //if (env.IsDevelopment())
+        if (env.IsEnvironment("Development"))
         {
-            endpoints.MapGet("/", async context =>
+            app.UseDeveloperExceptionPage();
+
+            //Aggiorniamo un file per notificare al BrowserSync che deve aggiornare la pagina
+            lifetime.ApplicationStarted.Register(() =>
             {
-                await context.Response.WriteAsync("Hello from Startup.cs!");
+                string filePath = Path.Combine(env.ContentRootPath, "bin/reload.txt");
+                File.WriteAllText(filePath, DateTime.Now.ToString());
             });
-        });
-    }
+        }
+        else
+        {
+            app.UseExceptionHandler("/Error");
+            app.UseHsts();
+        }
+
+    app.UseStaticFiles();
+    app.UseRouting();
+
+    app.UseEndpoints(endpoints =>
+    {
+        endpoints.MapControllerRoute(
+            name: "default",
+            pattern: "{controller=Home}/{action=Index}/{id?}");
+    });
+}
 }

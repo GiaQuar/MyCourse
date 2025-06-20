@@ -1,0 +1,13 @@
+{
+    "browserSync.config": {
+        "proxy": "localhost:5092",
+        "files": ["bin/reload.txt", "Views/**/*.cshtml", "wwwroot/**/*"]
+    },
+    "fontAwesomeAutocomplete.patterns": ["**/*.cshtml"],
+    "fontAwesomeAutocomplete.triggerWord": "f",
+    "emmet.triggerExpansionOnTab": true,
+    "emmet.triggerExpansionOnSpace": false,
+    "editor.suggest.snippetsPreventQuickSuggestions": false,
+    "editor.acceptSuggestionOnEnter": "off",
+    "editor.suggest.showReferences": true
+}
